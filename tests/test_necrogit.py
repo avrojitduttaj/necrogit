@@ -8,6 +8,8 @@ from click.testing import CliRunner
 from necrogit.core.archaeology import inspect_file, inspect_directory
 from necrogit.core.persona import MaintainerMedium
 from necrogit.core.engine import SeanceEngine
+from necrogit.core.backboard import BackboardMemory
+from necrogit.telemetry import record_breadcrumb, set_agent_context
 from necrogit.cli import cli
 
 def test_archaeology_detects_deprecated_imports():
@@ -48,6 +50,26 @@ def test_engine_prompt_payload_construction(mock_post):
     call_args = mock_post.call_args[1]
     system_prompt = call_args["json"]["messages"][0]["content"]
     assert "Ada Lovelace" in system_prompt
+
+@patch("httpx.Client.post")
+def test_engine_explain_design_construction(mock_post):
+    mock_response = MagicMock()
+    mock_response.status_code = 200
+    mock_response.json.return_value = {
+        "choices": [{"message": {"content": "In 2008, GIL contention necessitated manual pipe buffers."}}]
+    }
+    mock_post.return_value = mock_response
+
+    engine = SeanceEngine(model="gemma2:9b")
+    persona = {"maintainer": "Guido van Rossum", "last_active": "2018-07-12", "brevity": "philosophical"}
+    explanation = engine.explain_design(persona, "import pipes", symbol_query="format_pipeline")
+
+    assert "GIL contention" in explanation
+    call_args = mock_post.call_args[1]
+    system_prompt = call_args["json"]["messages"][0]["content"]
+    user_prompt = call_args["json"]["messages"][1]["content"]
+    assert "Guido van Rossum" in system_prompt
+    assert "format_pipeline" in user_prompt
 
 def test_archaeology_detects_syntax_rot(tmp_path):
     broken_code = "def syntax_horror(\n    print('unclosed function'\n"
@@ -101,15 +123,47 @@ def test_engine_connect_error(mock_post):
     result = engine.consult_ghost(persona, "import imp", "Line 1: imp is gone")
     assert "Séance Severed" in result
 
-def test_cli_summon_and_inspect_flow(tmp_path):
-    runner = CliRunner()
-    result = runner.invoke(cli, ["summon", str(tmp_path)])
-    assert result.exit_code == 0
-    assert "No git presence detected" in result.output
+def test_backboard_memory_local_persistence(tmp_path):
+    mem = BackboardMemory(workspace_root=tmp_path)
+    persona = {
+        "maintainer": "Margaret Hamilton",
+        "brevity": "terse",
+        "last_active": "1969-07-20",
+        "commit_count": 42
+    }
+    dossier = mem.save_dossier("apollo-11", persona, relics_count=3, last_action="summon")
+    assert dossier["maintainer"] == "Margaret Hamilton"
 
+    retrieved = mem.get_dossier("apollo-11")
+    assert retrieved is not None
+    assert retrieved["commit_count"] == 42
+    assert retrieved["relics_count"] == 3
+
+    all_dossiers = mem.list_dossiers()
+    assert "apollo-11" in all_dossiers
+
+def test_telemetry_breadcrumbs_and_context():
+    # Should run cleanly without raising exceptions whether Sentry is active or not
+    record_breadcrumb("test_cat", "Test breadcrumb message", data={"sample": 1})
+    set_agent_context("test_agent", {"version": "0.1.0"})
+
+def test_cli_summon_inspect_explain_and_memory(tmp_path):
+    runner = CliRunner()
+    
+    # 1. Summon on non-git dir
+    res_summon = runner.invoke(cli, ["summon", str(tmp_path)])
+    assert res_summon.exit_code == 0
+    assert "No git presence detected" in res_summon.output
+
+    # 2. Inspect bitrot
     py_file = tmp_path / "obsolete.py"
     py_file.write_text("import distutils\nimport imp\n", encoding="utf-8")
-    result_inspect = runner.invoke(cli, ["inspect", str(tmp_path)])
-    assert result_inspect.exit_code == 0
-    assert "distutils" in result_inspect.output
-    assert "imp" in result_inspect.output
+    res_inspect = runner.invoke(cli, ["inspect", str(tmp_path)])
+    assert res_inspect.exit_code == 0
+    assert "distutils" in res_inspect.output
+    assert "imp" in res_inspect.output
+
+    # 3. Memory inspection
+    res_mem = runner.invoke(cli, ["memory"])
+    assert res_mem.exit_code == 0
+    assert "Backboard Persistent Memory" in res_mem.output

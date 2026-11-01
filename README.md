@@ -4,7 +4,30 @@
 
 ---
 
-NecroGit is an offline code archaeology medium and repository necromancer. It communes with abandoned software by mining historical Git commit telemetry to recreate the persona and coding habits of long-gone maintainers, detects bitrot and deprecated Python APIs through AST analysis, and channels local open-weight LLMs (Gemma 2, Llama 3 via Ollama) to draft authentic, style-preserving resurrective patches.
+NecroGit is an offline code archaeology medium and repository necromancer. When pointed at an abandoned legacy repository or obsolete dependency, it traces deprecated APIs, mines historical Git commit telemetry to recreate the persona and coding habits of long-gone maintainers, channels local open-weight LLMs (Gemma 2, Llama 3.2 via Ollama/vLLM) to auto-patch bitrot, and unravels obscure historical design choices.
+
+---
+
+## 🎯 Partner Category Targets
+
+### 1. 💎 Best Use of Gemma
+- **Offline Open-Weight Code Reasoning:** Powered by **Google Gemma 2** (`gemma2:9b`, `gemma2:2b`, `gemma2:27b`) running locally through Ollama or vLLM.
+- **Architectural Exegesis & Style Preservation:** Gemma 2's high instruction-following fidelity is leveraged to digest AST bitrot findings and channel the maintainer's vintage coding style (casing, comment density, naming conventions) without cloud model homogenization.
+- **100% Private & Air-Gapped:** Sensitive source trees, legacy industrial code, and unreleased repositories never leave your workstation. Zero API fees, zero telemetry leaks.
+
+### 2. 🧠 Best Use of Backboard (R-CLI)
+- **Persistent Agentic Memory:** Integrates state management and persistent memory via Backboard (`backboard.io` & the `R-CLI`).
+- **Dossier Synchronization:** Preserves maintainer essences, code archaeology findings, and séance history across sessions in `.necrogit/seance_memory.json` (air-gapped) and seamlessly syncs to Backboard state when `BACKBOARD_API_KEY` or `backboard login` is active.
+- **Run-to-Run Context:** Future developer sessions immediately remember who the maintainer was, which relics were identified, and past resurrective actions.
+
+### 3. 📡 Best Use of Sentry Agent Tracing
+- **Step-by-Step Code Archaeology Tracing:** Instrumented with `sentry-sdk>=2.0.0` to capture granular Agent Tracing spans for each stage of the resurrection pipeline.
+- **Traced Spans & Breadcrumbs:**
+  - `necrogit.archaeology`: AST tree traversal, syntax rot classification, and file inspections.
+  - `necrogit.persona`: Git commit graph mining, author frequency analysis, and cadence divining.
+  - `necrogit.llm`: Local inference spans tagged with `gen_ai.system: ollama` and `gen_ai.request.model`.
+  - `necrogit.backboard`: Memory persistence and state synchronization spans.
+- **Agent Context & Diagnostics:** Enriches Sentry trace scopes with maintainer persona metadata (`maintainer_persona`) and agent reasoning breadcrumbs.
 
 ---
 
@@ -28,45 +51,30 @@ NecroGit is an offline code archaeology medium and repository necromancer. It co
                                            ▼
                               ┌────────────────────────┐
                               │      SeanceEngine      │
-                              │ (Local Open-Weight LLM)│
-                              │  Gemma 2 / Llama 3     │
+                              │  Google Gemma 2 9B     │
+                              │   (Local / Offline)    │
                               └────────────┬───────────┘
                                            │
-                                           ▼
-                              ┌────────────────────────┐
-                              │ Resurrective Diff File │
-                              │     (.patch format)    │
-                              └────────────────────────┘
+                    ┌──────────────────────┴──────────────────────┐
+                    ▼                                             ▼
+       ┌────────────────────────┐                    ┌────────────────────────┐
+       │ Resurrective Diff File │                    │    Backboard Memory    │
+       │     (.patch format)    │                    │ (Persistent Dossier &  │
+       │                        │                    │  Sentry Span Tracing)  │
+       └────────────────────────┘                    └────────────────────────┘
 ```
-
-1. **AST Code Archaeology (`necrogit.core.archaeology`):**
-   Parses Python files into Abstract Syntax Trees to identify obsolete standard library modules (e.g., Python 3.12/3.13 removals such as `imp`, `pipes`, `cgi`, `cgitb`, `crypt`, `telnetlib`, `xdrlib`), deprecated APIs (`time.clock`, `asyncio.get_event_loop`), and structural syntax decay.
-
-2. **Git Persona Mining (`necrogit.core.persona`):**
-   Traverses repository commit history to divine the primary author's name, commit volume, stylistic temperament (`laconic`, `balanced`, `verbose`), active era, and authentic historical commit messages.
-
-3. **Offline Séance Engine (`necrogit.core.engine`):**
-   Injects the maintainer's stylistic essence and AST findings into a targeted prompt sent to an air-gapped local model via OpenAI-compatible endpoints (`http://localhost:11434/v1`). Models produce unified diffs preserving legacy casing and comment conventions.
-
-4. **Sentry Agent Tracing (`necrogit.telemetry`):**
-   Transparent span monitoring for every stage of the séance (archaeology scanning, history mining, LLM channeling) using `sentry-sdk>=2.0.0`.
 
 ---
 
 ## ⚡ Why Open Innovation Matters
 
-- **100% Offline & Air-Gapped:** Sensitive or proprietary legacy code never leaves your workstation. No closed APIs, no remote data leaks.
-- **Style Preservation:** Commercial LLMs force generic modern styles. NecroGit channels the original maintainer's cadence and conventions.
-- **Durable & Resilient:** Immune to cloud API deprecations, rate limits, price surges, or subscription lockouts.
+- **100% Offline & Private:** Code archaeology operates completely air-gapped using local weights (`gemma2:9b` via Ollama). Proprietary or sensitive legacy code never leaves your workstation.
+- **Style Preservation:** Closed commercial APIs enforce homogenized writing styles. NecroGit passes custom AST findings and maintainer telemetry to open-weight models, preserving vintage naming and variable conventions.
+- **Durable & Resilient:** Immune to cloud API deprecations, rate limits, subscription tiers, or remote service shutdowns.
 
 ---
 
 ## 🚀 Installation & Setup
-
-### Prerequisites
-- Python >= 3.10
-- Git
-- Local LLM runner (e.g., [Ollama](https://ollama.com) with `gemma2:9b` or `llama3.1:8b`)
 
 ```bash
 # Clone the repository
@@ -75,33 +83,42 @@ cd necrogit
 
 # Install in editable mode
 pip install -e .
+
+# (Optional) Set up Sentry Agent Tracing and Backboard Memory
+export SENTRY_DSN="https://your-dsn@sentry.io/project"
+export BACKBOARD_API_KEY="your-backboard-key"
+```
+
+Ensure your local open-weight model is running:
+```bash
+ollama run gemma2:9b
 ```
 
 ---
 
-## 📖 CLI Usage
+## 📖 CLI Commands
 
-### 1. Summon the Maintainer's Spirit
-Analyze Git history to manifest the maintainer's spirit:
+### 1. `necrogit summon [REPO_PATH]`
+Summon and interview the maintainer's spirit from Git history:
 ```bash
 necrogit summon .
 ```
 ```
 🕯️  Casting circle and reading repository runes...
-┌─────────────────────────── Séance Manifestation ────────────────────────────┐
-│ Dominant Spirit: Ada Lovelace                                               │
-│ Last Walked the Earth: 1852-11-27                                           │
-│ Total Invocations: 120 commits                                              │
-│ Persona Temperament: terse/laconic                                          │
-│                                                                             │
-│ Sample Historical Invocations:                                              │
-│   • Compute Bernoulli numbers in engine cycle #4                            │
-│   • Rectify gear backlash in punchcard feeder                               │
-└─────────────────────────────────────────────────────────────────────────────┘
+╭──────────────────────────── Séance Manifestation ────────────────────────────╮
+│ Dominant Spirit: Ada Lovelace                                                │
+│ Last Walked the Earth: 1852-11-27                                            │
+│ Total Invocations: 120 commits                                               │
+│ Persona Temperament: terse/laconic                                           │
+│                                                                              │
+│ Sample Historical Invocations:                                               │
+│   • Compute Bernoulli numbers in engine cycle #4                             │
+│   • Rectify gear backlash in punchcard feeder                                │
+╰──────────────────────────────────────────────────────────────────────────────╯
 ```
 
-### 2. Inspect Repository for Bitrot Relics
-Scan your codebase with AST archaeology:
+### 2. `necrogit inspect [TARGET_DIR]`
+Scan local files for bitrot, deprecated modules (Python 3.8–3.13 PEP 594 removals), and breaking syntax:
 ```bash
 necrogit inspect demo/
 ```
@@ -111,53 +128,65 @@ Performing code archaeology on: demo...
 ┌──────────────────┬──────┬────────────────────────┬──────────────────────────┐
 │ File             │ Line │ Artifact               │ Historical Diagnosis     │
 ├──────────────────┼──────┼────────────────────────┼──────────────────────────┤
-│ ancient_relic.py │ 3    │ imp                    │ Removed in Python 3.12;  │
-│                  │      │                        │ use importlib            │
-│ ancient_relic.py │ 4    │ pipes                  │ Removed in Python 3.13;  │
-│                  │      │                        │ use subprocess or shlex  │
-│ ancient_relic.py │ 5    │ cgi                    │ Removed in Python 3.13;  │
-│                  │      │                        │ use urllib.parse or      │
-│                  │      │                        │ email                    │
-│ ancient_relic.py │ 22   │ time.clock             │ Removed in Python 3.8;   │
-│                  │      │                        │ use time.perf_counter()  │
-│ ancient_relic.py │ 29   │ asyncio.get_event_loop │ Deprecated in modern     │
-│                  │      │                        │ Python without running   │
-│                  │      │                        │ loop; prefer             │
-│                  │      │                        │ asyncio.run()            │
+│ ancient_relic.py │ 3    │ imp                    │ Removed in Python 3.12   │
+│ ancient_relic.py │ 4    │ pipes                  │ Removed in Python 3.13   │
+│ ancient_relic.py │ 5    │ cgi                    │ Removed in Python 3.13   │
+│ ancient_relic.py │ 22   │ time.clock             │ Removed in Python 3.8    │
+│ ancient_relic.py │ 29   │ asyncio.get_event_loop │ Deprecated in modern Py  │
 └──────────────────┴──────┴────────────────────────┴──────────────────────────┘
 ```
 
-### 3. Channel a Resurrective Patch
-Channel the maintainer to draft an in-character unified diff:
+### 3. `necrogit explain <FILE_PATH> [--symbol NAME]`
+Channel the maintainer to explain obscure historical design choices:
 ```bash
-# Draft diff to terminal
-necrogit patch demo/ancient_relic.py --model gemma2:9b
+necrogit explain demo/ancient_relic.py --symbol benchmark_execution --model gemma2:9b
+```
 
-# Save patch file directly
+### 4. `necrogit patch <FILE_PATH> [--apply]`
+Channel the maintainer to draft an in-style resurrective patch:
+```bash
 necrogit patch demo/ancient_relic.py --model gemma2:9b --apply
+```
+
+### 5. `necrogit memory`
+Inspect persistent repository dossiers and Backboard memory synchronization status:
+```bash
+necrogit memory
+```
+```
+🧠 Backboard Persistent Memory: Air-Gapped / Local Mode (.necrogit/seance_memory.json)
+                      📜 Known Repository Dossiers                       
+┏━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━┳━━━━━━━━┳━━━━━━━━━━━━━┓
+┃ Repository ┃ Maintainer Spirit   ┃ Temperament ┃ Relics ┃ Last Action ┃
+┡━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━╇━━━━━━━━╇━━━━━━━━━━━━━┩
+│ necrogit   │ NecroGit Maintainer │ verbose     │ 5      │ patch       │
+└────────────┴─────────────────────┴─────────────┴────────┴─────────────┘
 ```
 
 ---
 
-## 🧪 Testing
+## 🧪 Automated Test Suite
 
-Run the automated test suite with `pytest`:
+Run all unit and integration tests:
 ```bash
 pytest -v
 ```
 
-All 8 comprehensive tests cover:
-- AST archaeology detection of deprecated modules and attributes (`imp`, `pipes`, `cgi`, `time.clock`, `asyncio.get_event_loop`)
-- Syntax error and syntax rot resilience
-- Non-git directory fallbacks and graceful degradation
-- Maintainer persona extraction from active git commit history
-- SeanceEngine prompt payload and system message styling
-- Offline model connection error recovery
-- CLI `summon` and `inspect` end-to-end command runner flows
+All 11 tests pass with 100% code integrity:
+- `test_archaeology_detects_deprecated_imports`
+- `test_persona_non_git_directory`
+- `test_engine_prompt_payload_construction`
+- `test_engine_explain_design_construction`
+- `test_archaeology_detects_syntax_rot`
+- `test_archaeology_inspect_directory`
+- `test_persona_git_repo`
+- `test_engine_connect_error`
+- `test_backboard_memory_local_persistence`
+- `test_telemetry_breadcrumbs_and_context`
+- `test_cli_summon_inspect_explain_and_memory`
 
 ---
 
 ## 🕯️ Hacktoberfest 2026
 
-Part of the **Ghost in the Machine** theme:
-Bringing dead open-source repositories back to life with ethical, private, and local open-weight AI.
+Part of the **Ghost in the Machine** theme: Resurrecting abandoned code with ethical, air-gapped, open-weight AI.
