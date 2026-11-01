@@ -7,3 +7,6 @@ __pycache__/
 build/
 dist/
 *.egg-info/
+necrogit-site/
+necrogit-demo-sandbox/
+test_docs/

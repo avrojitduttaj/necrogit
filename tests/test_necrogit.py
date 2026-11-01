@@ -1,4 +1,5 @@
 import tempfile
+import zipfile
 from pathlib import Path
 from unittest.mock import patch, MagicMock
 import git
@@ -123,6 +124,85 @@ def test_engine_connect_error(mock_post):
     result = engine.consult_ghost(persona, "import imp", "Line 1: imp is gone")
     assert "Séance Severed" in result
 
+@patch("httpx.Client.post")
+def test_engine_http_404_error(mock_post):
+    mock_resp = MagicMock()
+    mock_resp.status_code = 404
+    mock_resp.text = "404 Not Found"
+    mock_post.return_value = mock_resp
+
+    engine = SeanceEngine(base_url="http://localhost:11434/v1")
+    persona = {"maintainer": "Dennis Ritchie", "last_active": "2011-10-12", "brevity": "laconic"}
+    result = engine.consult_ghost(persona, "import imp", "imp removed")
+    assert "404 Not Found" in result or "Endpoint" in result
+
+@patch("httpx.Client.post")
+def test_engine_model_not_found_404(mock_post):
+    mock_resp = MagicMock()
+    mock_resp.status_code = 404
+    mock_resp.text = "model 'gemma2:9b' not found, try pulling it first"
+    mock_post.return_value = mock_resp
+
+    engine = SeanceEngine(model="gemma2:9b")
+    persona = {"maintainer": "Linus Torvalds", "last_active": "2026-01-01", "brevity": "direct"}
+    result = engine.consult_ghost(persona, "import imp", "imp removed")
+    assert "Model Absent" in result or "ollama pull" in result
+
+@patch("httpx.Client.post")
+def test_engine_native_ollama_fallback(mock_post):
+    # Primary /v1/chat/completions returns 404, fallback /api/chat returns 200
+    resp_primary = MagicMock()
+    resp_primary.status_code = 404
+    resp_primary.text = "404 Not Found"
+
+    resp_fallback = MagicMock()
+    resp_fallback.status_code = 200
+    resp_fallback.json.return_value = {
+        "message": {"role": "assistant", "content": "--- a/test.py\n+++ b/test.py\n@@ -1 +1 @@\n-import imp\n+import importlib"}
+    }
+
+    mock_post.side_effect = [resp_primary, resp_fallback]
+
+    engine = SeanceEngine(base_url="http://localhost:11434/v1")
+    persona = {"maintainer": "Ada Lovelace", "last_active": "1852-11-27", "brevity": "laconic"}
+    result = engine.consult_ghost(persona, "import imp", "Line 1: imp is removed")
+    assert "--- a/test.py" in result
+    assert "+import importlib" in result
+
+@patch("httpx.Client.post")
+def test_engine_malformed_response(mock_post):
+    mock_resp = MagicMock()
+    mock_resp.status_code = 200
+    mock_resp.json.return_value = {"unrecognized_key": []}
+    mock_post.return_value = mock_resp
+
+    engine = SeanceEngine()
+    persona = {"maintainer": "Ada Lovelace", "last_active": "1852-11-27", "brevity": "laconic"}
+    result = engine.consult_ghost(persona, "import imp", "Line 1: imp is removed")
+    assert "Malformed Response" in result
+
+@patch("httpx.Client.post")
+def test_engine_timeout(mock_post):
+    mock_post.side_effect = httpx.TimeoutException("Read timed out")
+    engine = SeanceEngine()
+    persona = {"maintainer": "Ada Lovelace", "last_active": "1852-11-27", "brevity": "laconic"}
+    result = engine.consult_ghost(persona, "import imp", "Line 1: imp is removed")
+    assert "Timeout" in result
+
+@patch("httpx.Client.get")
+def test_engine_check_health(mock_get):
+    mock_resp = MagicMock()
+    mock_resp.status_code = 200
+    mock_resp.json.return_value = {
+        "models": [{"name": "gemma2:9b"}, {"name": "llama3.2:3b"}]
+    }
+    mock_get.return_value = mock_resp
+
+    engine = SeanceEngine(model="gemma2:9b")
+    health = engine.check_health()
+    assert health["connected"] is True
+    assert health["model_found"] is True
+
 def test_backboard_memory_local_persistence(tmp_path):
     mem = BackboardMemory(workspace_root=tmp_path)
     persona = {
@@ -142,6 +222,9 @@ def test_backboard_memory_local_persistence(tmp_path):
     all_dossiers = mem.list_dossiers()
     assert "apollo-11" in all_dossiers
 
+    mem.clear()
+    assert len(mem.list_dossiers()) == 0
+
 def test_telemetry_breadcrumbs_and_context():
     # Should run cleanly without raising exceptions whether Sentry is active or not
     record_breadcrumb("test_cat", "Test breadcrumb message", data={"sample": 1})
@@ -149,7 +232,7 @@ def test_telemetry_breadcrumbs_and_context():
 
 def test_cli_summon_inspect_explain_and_memory(tmp_path):
     runner = CliRunner()
-    
+
     # 1. Summon on non-git dir
     res_summon = runner.invoke(cli, ["summon", str(tmp_path)])
     assert res_summon.exit_code == 0
@@ -163,7 +246,65 @@ def test_cli_summon_inspect_explain_and_memory(tmp_path):
     assert "distutils" in res_inspect.output
     assert "imp" in res_inspect.output
 
-    # 3. Memory inspection
+    # 3. Bare memory invocation (empty state)
     res_mem = runner.invoke(cli, ["memory"])
     assert res_mem.exit_code == 0
     assert "Backboard Persistent Memory" in res_mem.output
+
+def test_cli_memory_populated_and_clear(tmp_path):
+    runner = CliRunner()
+    # Save a dossier directly into memory store
+    mem = BackboardMemory()
+    mem.save_dossier("demo_repo", {"maintainer": "Alan Turing", "brevity": "mathematical", "last_active": "1954", "commit_count": 99}, relics_count=4, last_action="summon")
+
+    res_mem = runner.invoke(cli, ["memory"])
+    assert res_mem.exit_code == 0
+    assert "Alan Turing" in res_mem.output
+
+    # Test clear
+    res_clear = runner.invoke(cli, ["memory", "--clear"])
+    assert res_clear.exit_code == 0
+    assert "cleared" in res_clear.output
+
+def test_cli_export_web(tmp_path):
+    runner = CliRunner()
+    export_target = tmp_path / "web_export"
+    result = runner.invoke(cli, ["export-web", str(export_target)])
+    assert result.exit_code == 0
+    assert "Exported NecroGit web assets" in result.output
+    index_file = export_target / "index.html"
+    assert index_file.exists()
+    assert "NecroGit" in index_file.read_text(encoding="utf-8")
+
+def test_cli_export_web_paths_with_spaces_and_zip(tmp_path):
+    runner = CliRunner()
+    export_target = tmp_path / "target folder with spaces" / "site export"
+    result = runner.invoke(cli, ["export-web", str(export_target)])
+    assert result.exit_code == 0
+    assert "Exported NecroGit web assets" in result.output
+
+    # Verify files in folder with spaces
+    assert (export_target / "index.html").exists()
+    assert (export_target / "style.css").exists()
+    assert (export_target / "app.js").exists()
+    assert (export_target / "README.md").exists()
+
+    # Verify ZIP bundle was generated and contains valid contents
+    zip_bundle = export_target / "necrogit-site.zip"
+    assert zip_bundle.exists()
+    with zipfile.ZipFile(zip_bundle, "r") as zf:
+        namelist = zf.namelist()
+        assert "index.html" in namelist
+        assert "style.css" in namelist
+
+    # Test repeated export (idempotency)
+    result_repeat = runner.invoke(cli, ["export-web", str(export_target)])
+    assert result_repeat.exit_code == 0
+    assert (export_target / "index.html").exists()
+
+def test_cli_doctor():
+    runner = CliRunner()
+    result = runner.invoke(cli, ["doctor"])
+    assert result.exit_code == 0
+    assert "NecroGit System Diagnostics" in result.output
+    assert "Python Environment" in result.output

@@ -4,7 +4,9 @@
 
 ---
 
-NecroGit is an offline code archaeology medium and repository necromancer. When pointed at an abandoned legacy repository or obsolete dependency, it traces deprecated APIs, mines historical Git commit telemetry to recreate the persona and coding habits of long-gone maintainers, channels local open-weight LLMs (Gemma 2, Llama 3.2 via Ollama/vLLM) to auto-patch bitrot, and unravels obscure historical design choices.
+NecroGit is an offline code archaeology medium and repository necromancer. When pointed at an abandoned legacy repository or obsolete dependency, it traces deprecated APIs, mines historical Git commit telemetry to recreate the persona and coding habits of long-gone maintainers, channels local open-weight LLMs (Gemma 2, Llama 3 via Ollama/vLLM) to auto-patch bitrot, and unravels obscure historical design choices.
+
+It includes a self-contained web workbench, an interactive CRT terminal emulator, and static export capabilities for hosting documentation anywhere.
 
 ---
 
@@ -12,7 +14,7 @@ NecroGit is an offline code archaeology medium and repository necromancer. When 
 
 ### 1. 💎 Best Use of Gemma
 - **Offline Open-Weight Code Reasoning:** Powered by **Google Gemma 2** (`gemma2:9b`, `gemma2:2b`, `gemma2:27b`) running locally through Ollama or vLLM.
-- **Architectural Exegesis & Style Preservation:** Gemma 2's high instruction-following fidelity is leveraged to digest AST bitrot findings and channel the maintainer's vintage coding style (casing, comment density, naming conventions) without cloud model homogenization.
+- **Architectural Exegesis & Style Preservation:** Gemma 2's instruction-following fidelity is leveraged to digest AST bitrot findings and channel the maintainer's vintage coding style (casing, comment density, naming conventions) without cloud model homogenization.
 - **100% Private & Air-Gapped:** Sensitive source trees, legacy industrial code, and unreleased repositories never leave your workstation. Zero API fees, zero telemetry leaks.
 
 ### 2. 🧠 Best Use of Backboard (R-CLI)
@@ -76,27 +78,49 @@ NecroGit is an offline code archaeology medium and repository necromancer. When 
 
 ## 🚀 Installation & Setup
 
+### Linux / macOS
 ```bash
 # Clone the repository
-git clone https://github.com/your-username/necrogit.git
+git clone https://github.com/avrojitduttaj/necrogit.git
 cd necrogit
+
+# Create and activate virtual environment
+python -m venv .venv
+source .venv/bin/activate
 
 # Install in editable mode
 pip install -e .
 
-# (Optional) Set up Sentry Agent Tracing and Backboard Memory
-export SENTRY_DSN="https://your-dsn@sentry.io/project"
-export BACKBOARD_API_KEY="your-backboard-key"
+# Verify installation
+necrogit --help
 ```
 
-Ensure your local open-weight model is running:
-```bash
-ollama run gemma2:9b
+### Windows PowerShell
+```powershell
+# 1. Clone repository
+git clone https://github.com/avrojitduttaj/necrogit.git
+cd necrogit
+
+# 2. Create virtual environment
+python -m venv .venv
+
+# 3. Allow script execution for active session if needed
+Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
+
+# 4. Activate virtual environment
+.\.venv\Scripts\Activate.ps1
+
+# 5. Install in editable mode
+python -m pip install --upgrade pip
+python -m pip install -e .
+
+# 6. Verify installation
+necrogit --help
 ```
 
 ---
 
-## 📖 CLI Commands
+## 📖 CLI Commands Reference
 
 ### 1. `necrogit summon [REPO_PATH]`
 Summon and interview the maintainer's spirit from Git history:
@@ -118,7 +142,7 @@ necrogit summon .
 ```
 
 ### 2. `necrogit inspect [TARGET_DIR]`
-Scan local files for bitrot, deprecated modules (Python 3.8–3.13 PEP 594 removals), and breaking syntax:
+Scan local files for bitrot, deprecated modules (Python 3.8–3.13 PEP 594 removals: `imp`, `pipes`, `cgi`, `time.clock`), and breaking syntax:
 ```bash
 necrogit inspect demo/
 ```
@@ -136,31 +160,88 @@ Performing code archaeology on: demo...
 └──────────────────┴──────┴────────────────────────┴──────────────────────────┘
 ```
 
-### 3. `necrogit explain <FILE_PATH> [--symbol NAME]`
+### 3. `necrogit patch <FILE_PATH> [--apply] [--model] [--base-url]`
+Channel the maintainer to draft an in-style resurrective patch:
+```bash
+# Preview diff in terminal
+necrogit patch demo/ancient_relic.py --model gemma2:9b
+
+# Apply diff directly to a .patch file
+necrogit patch demo/ancient_relic.py --model gemma2:9b --apply
+```
+
+### 4. `necrogit explain <FILE_PATH> [--symbol NAME] [--model] [--base-url]`
 Channel the maintainer to explain obscure historical design choices:
 ```bash
 necrogit explain demo/ancient_relic.py --symbol benchmark_execution --model gemma2:9b
 ```
 
-### 4. `necrogit patch <FILE_PATH> [--apply]`
-Channel the maintainer to draft an in-style resurrective patch:
-```bash
-necrogit patch demo/ancient_relic.py --model gemma2:9b --apply
-```
-
-### 5. `necrogit memory`
+### 5. `necrogit memory [REPO_PATH] [--clear]`
 Inspect persistent repository dossiers and Backboard memory synchronization status:
 ```bash
+# View all known repository dossiers
 necrogit memory
+
+# Clear recorded memory
+necrogit memory --clear
+```
+
+### 6. `necrogit serve [--port 8000]`
+Start local HTTP server and automatically launch the interactive CRT web terminal:
+```bash
+necrogit serve --port 8000
+```
+
+### 7. `necrogit export-web [DESTINATION] [--zip/--no-zip]`
+Export the self-contained production website and generated `necrogit-site.zip` bundle to any directory:
+```bash
+necrogit export-web ./necrogit-site
+
+# Preview exported site locally:
+cd ./necrogit-site
+python -m http.server 8080
+```
+
+### 8. `necrogit doctor`
+Inspect installation integrity, Git availability, and local AI model connectivity:
+```bash
+necrogit doctor
 ```
 ```
-🧠 Backboard Persistent Memory: Air-Gapped / Local Mode (.necrogit/seance_memory.json)
-                      📜 Known Repository Dossiers                       
-┏━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━┳━━━━━━━━┳━━━━━━━━━━━━━┓
-┃ Repository ┃ Maintainer Spirit   ┃ Temperament ┃ Relics ┃ Last Action ┃
-┡━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━╇━━━━━━━━╇━━━━━━━━━━━━━┩
-│ necrogit   │ NecroGit Maintainer │ verbose     │ 5      │ patch       │
-└────────────┴─────────────────────┴─────────────┴────────┴─────────────┘
+╭────────────────────────────────╮
+│ 🩺 NecroGit System Diagnostics │
+╰────────────────────────────────╯
+• Python Environment: 3.12.13 (OK)
+• Git Telemetry: OK (Git 3.2.1, repo: necrogit)
+• Web Documentation Package: OK (Found web/index.html)
+• Sentry Agent Tracing: INACTIVE (SENTRY_DSN not set - running fully private)
+• Backboard Persistent Memory: AIR-GAPPED (Local .necrogit/seance_memory.json)
+• Probing Local LLM (http://localhost:11434/v1, target model: gemma2:9b)...
+  └─ Server: ONLINE (http://localhost:11434)
+  └─ Model Status: READY (gemma2:9b detected)
+```
+
+---
+
+## 🛠️ Troubleshooting & Local Ollama Setup
+
+### Starting Ollama
+Ensure Ollama is installed and running:
+```bash
+# 1. Start Ollama server
+ollama serve
+
+# 2. Download Gemma 2 model weights
+ollama pull gemma2:9b
+
+# 3. Verify connection with NecroGit
+necrogit doctor
+```
+
+### Resolving HTTP 404 Errors
+If you see an endpoint error, verify that your Ollama server is updated to `>= 0.1.24`. NecroGit automatically queries `/v1/chat/completions` and transparently falls back to native Ollama `/api/chat`. You can also explicitly specify your endpoint:
+```bash
+necrogit patch demo/ancient_relic.py --base-url http://localhost:11434/v1
 ```
 
 ---
@@ -172,18 +253,17 @@ Run all unit and integration tests:
 pytest -v
 ```
 
-All 11 tests pass with 100% code integrity:
-- `test_archaeology_detects_deprecated_imports`
-- `test_persona_non_git_directory`
-- `test_engine_prompt_payload_construction`
-- `test_engine_explain_design_construction`
-- `test_archaeology_detects_syntax_rot`
-- `test_archaeology_inspect_directory`
-- `test_persona_git_repo`
-- `test_engine_connect_error`
-- `test_backboard_memory_local_persistence`
-- `test_telemetry_breadcrumbs_and_context`
-- `test_cli_summon_inspect_explain_and_memory`
+All 21 comprehensive tests verify:
+- AST archaeology detection of deprecated modules (`imp`, `pipes`, `cgi`, `time.clock`, `asyncio.get_event_loop`)
+- Syntax error and syntax rot resilience
+- Non-git directory fallbacks and graceful degradation
+- Maintainer persona extraction from active git commit history
+- SeanceEngine prompt payload construction & design exegesis
+- Ollama connection failure handling, HTTP 404 differentiation, model-absent detection, native Ollama fallback, malformed responses, and timeouts
+- Backboard persistent memory (local storage, dossier retrieval, and memory clearing)
+- Sentry telemetry breadcrumb and context instrumentation
+- CLI command executions (`summon`, `inspect`, `explain`, `memory`, `export-web`, `doctor`)
+- Web asset export to directories containing spaces and deterministic ZIP bundling
 
 ---
 
