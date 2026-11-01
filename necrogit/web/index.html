@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NecroGit — The Repository Medium | Offline Code Archaeology & Resurrection</title>
+  <meta name="description" content="An offline CLI agent that resurrects abandoned open-source repositories and dead dependencies using AST analysis, Git mining, and local open-weight LLMs.">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🕯️</text></svg>">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Site Header -->
+  <header class="site-header">
+    <div class="nav-container">
+      <a href="#" class="brand-link">
+        <svg class="brand-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 2v8"></path>
+          <path d="m4.93 10.93 1.41 1.41"></path>
+          <path d="M2 18h2"></path>
+          <path d="M20 18h2"></path>
+          <path d="m19.07 10.93-1.41 1.41"></path>
+          <circle cx="12" cy="18" r="4"></circle>
+        </svg>
+        <span>NecroGit</span>
+      </a>
+
+      <nav class="main-nav">
+        <a href="#features">Features</a>
+        <a href="#workflow">How It Works</a>
+        <a href="#workbench">Interactive Séance</a>
+        <a href="#docs">CLI Docs</a>
+        <a href="#architecture">Architecture</a>
+        <a href="#downloads" class="btn btn-primary">Download</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <header class="hero-section">
+    <div class="badge-pill">
+      <span>Hacktoberfest 2026 // Ghost in the Machine</span>
+    </div>
+
+    <h1 class="hero-title">
+      Commune with dead code.<br>
+      <span class="gradient-text">Resurrect abandoned software.</span>
+    </h1>
+
+    <p class="hero-subtitle">
+      NecroGit is an offline code archaeology medium. It traces deprecated standard library APIs, mines Git commit history to recreate maintainer personas, and channels local open-weight AI (Gemma 2 / Llama 3) to draft faithful, style-preserving resurrective patches.
+    </p>
+
+    <div class="hero-actions">
+      <div class="install-command-box">
+        <span>$ pip install necrogit</span>
+        <button class="copy-btn" onclick="copyCommandText('pip install necrogit', this)">Copy</button>
+      </div>
+      <a href="#workbench" class="btn btn-primary">Try Web Séance</a>
+      <a href="#downloads" class="btn btn-secondary">Download Bundle</a>
+    </div>
+
+    <div style="display:flex; justify-content:center; gap:20px; font-size:0.85rem; color:var(--text-dim); flex-wrap:wrap;">
+      <span>✓ 100% Offline &amp; Air-Gapped</span>
+      <span>✓ Google Gemma 2 / Ollama</span>
+      <span>✓ Sentry Agent Tracing</span>
+      <span>✓ Backboard R-CLI Memory</span>
+    </div>
+  </header>
+
+  <main class="main-content">
+
+    <!-- Features Section -->
+    <section id="features" class="content-section">
+      <div class="section-header">
+        <div class="section-label">Capabilities</div>
+        <h2 class="section-title">The Repository Medium's Toolset</h2>
+        <p class="section-desc">Designed for software archaeologists, maintainers, and security engineers dealing with decades of unmaintained dependencies.</p>
+      </div>
+
+      <div class="features-grid">
+        <div class="card">
+          <div class="card-icon">🔍</div>
+          <h3 class="card-title">AST Bitrot Archaeology</h3>
+          <p class="card-desc">Parses legacy code into Abstract Syntax Trees to detect removed standard libraries (Python 3.12/3.13 dead battery PEP 594 removals like <code>imp</code>, <code>pipes</code>, <code>cgi</code>), deprecated timing functions, and structural syntax rot.</p>
+        </div>
+
+        <div class="card">
+          <div class="card-icon">🧙</div>
+          <h3 class="card-title">Git Persona Reconstruction</h3>
+          <p class="card-desc">Mines repository commit history to divine the primary maintainer's name, commit volume, era, and stylistic cadence (laconic, balanced, or verbose), preserving historic variable casing and comments.</p>
+        </div>
+
+        <div class="card">
+          <div class="card-icon">⚡</div>
+          <h3 class="card-title">Local Gemma 2 Inference</h3>
+          <p class="card-desc">Channels Google Gemma 2 and Meta Llama 3.2 locally via Ollama or vLLM. Proprietary or confidential source trees never leave your local workstation. Zero cloud token fees.</p>
+        </div>
+
+        <div class="card">
+          <div class="card-icon">📜</div>
+          <h3 class="card-title">Historical Design Exegesis</h3>
+          <p class="card-desc">The <code>necrogit explain</code> command interviews the maintainer's ghost to explain <em>why</em> obscure historical workarounds (GIL contention, pre-PEP 418 clock resolution, old threading models) were originally chosen.</p>
+        </div>
+
+        <div class="card">
+          <div class="card-icon">🧠</div>
+          <h3 class="card-title">Backboard Persistent Memory</h3>
+          <p class="card-desc">Integrates persistent agent memory across CLI runs. Stores repository dossiers locally in <code>.necrogit/seance_memory.json</code> and seamlessly synchronizes with Backboard (<code>R-CLI</code> / backboard.io) when configured.</p>
+        </div>
+
+        <div class="card">
+          <div class="card-icon">📡</div>
+          <h3 class="card-title">Sentry Agent Tracing</h3>
+          <p class="card-desc">Instrumented with <code>sentry-sdk&gt;=2.0.0</code>, tracking step-by-step code archaeology spans (AST scanning, Git graph analysis, LLM inference latency, and diagnostic breadcrumbs).</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- How It Works Section -->
+    <section id="workflow" class="content-section">
+      <div class="section-header">
+        <div class="section-label">Workflow</div>
+        <h2 class="section-title">From Bitrot to Resurrection</h2>
+        <p class="section-desc">A deterministic, four-step pipeline transforming abandoned repos into modern, deployable code.</p>
+      </div>
+
+      <div class="workflow-steps">
+        <div class="step-card">
+          <div class="step-number">STEP 01</div>
+          <h4>1. Inspect Bitrot</h4>
+          <p>Run <code>necrogit inspect</code> to detect deprecated imports, dead batteries, and syntax errors across the target tree.</p>
+        </div>
+
+        <div class="step-card">
+          <div class="step-number">STEP 02</div>
+          <h4>2. Summon Spirit</h4>
+          <p>Execute <code>necrogit summon</code> to extract historical commit patterns, vocabulary, and maintainer persona.</p>
+        </div>
+
+        <div class="step-card">
+          <div class="step-number">STEP 03</div>
+          <h4>3. Channel Séance</h4>
+          <p>Local Gemma 2 combines the AST findings and persona to generate an in-character unified diff patch or design exegesis.</p>
+        </div>
+
+        <div class="step-card">
+          <div class="step-number">STEP 04</div>
+          <h4>4. Verify &amp; Apply</h4>
+          <p>Review the unified diff output in your terminal and apply directly via <code>necrogit patch --apply</code> or <code>git apply</code>.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Interactive Workbench & Terminal Section -->
+    <section id="workbench" class="content-section">
+      <div class="section-header">
+        <div class="section-label">Live Simulation</div>
+        <h2 class="section-title">Interactive Séance Workbench</h2>
+        <p class="section-desc">Test code archaeology and simulated maintainer patch generation directly in your browser.</p>
+      </div>
+
+      <div class="workbench-container">
+        <div class="workbench-tabs">
+          <button class="wb-tab active" onclick="switchWbTab(0)">Code Séance Workbench</button>
+          <button class="wb-tab" onclick="switchWbTab(1)">Terminal Emulator (TTY-1)</button>
+        </div>
+
+        <!-- Tab 1: Workbench -->
+        <div class="wb-content active">
+          <div class="workbench-grid">
+            <div>
+              <div class="editor-label">
+                <span>Legacy Python Code Artifact</span>
+                <span style="font-size:0.75rem; color:var(--accent-gold);">Contains Python 3.8-3.13 Deprecations</span>
+              </div>
+              <textarea id="workbench-code" class="code-editor-area" spellcheck="false">"""Legacy Python module exhibiting classical bitrot relics."""
+
+import imp
+import pipes
+import cgi
+import time
+import asyncio
+
+def execute_stream(command_str):
+    t = pipes.Template()
+    t.append(command_str, "--")
+    return t
+
+def benchmark():
+    t0 = time.clock()
+    return time.clock() - t0
+
+def init_loop():
+    return asyncio.get_event_loop()
+</textarea>
+              <div class="action-bar">
+                <button class="btn btn-secondary" onclick="runSimulatedAstScan()">🔍 1. Run AST Scan</button>
+                <button class="btn btn-secondary" onclick="resetWorkbench()">↺ Reset Sample</button>
+              </div>
+            </div>
+
+            <div>
+              <div class="editor-label">
+                <span>Maintainer Essence Persona</span>
+                <span style="font-size:0.75rem; color:var(--text-dim);">(Simulated Browser Channel)</span>
+              </div>
+              <div style="margin-bottom:12px;">
+                <select id="spirit-select" class="spirit-select" style="width:100%;">
+                  <option value="ada">Ada Lovelace (1852-11-27) — Temperament: terse/laconic</option>
+                  <option value="ken">Ken Thompson (1970-01-01) — Temperament: minimalist unix hacker</option>
+                  <option value="grace">Grace Hopper (1959-09-09) — Temperament: meticulous compiler pioneer</option>
+                </select>
+              </div>
+
+              <div class="editor-label">
+                <span>Discovered Bitrot Relics</span>
+              </div>
+              <div id="ast-findings" class="findings-box">
+                <div style="color:var(--text-dim);">Run AST scan to identify deprecated modules...</div>
+              </div>
+
+              <div class="action-bar" style="margin-top:12px;">
+                <button class="btn btn-primary" onclick="runSimulatedPatch()">⚡ 2. Channel Resurrective Patch</button>
+                <button class="btn btn-secondary" onclick="copyToClipboard('diff-output', this)">📋 Copy Patch</button>
+              </div>
+            </div>
+          </div>
+
+          <div style="margin-top:24px;">
+            <div class="editor-label">
+              <span>Channelled Unified Diff Output</span>
+              <span style="font-size:0.75rem; color:var(--accent-emerald);">Ready for git apply</span>
+            </div>
+            <pre id="diff-output" class="diff-output-box">--- (Awaiting resurrective patch channeling...) ---</pre>
+          </div>
+        </div>
+
+        <!-- Tab 2: Terminal Emulator -->
+        <div class="wb-content">
+          <div class="terminal-window">
+            <div class="term-topbar">
+              <span>NECROGIT SPECTRAL SHELL // v0.1.0</span>
+              <span>AIR-GAPPED // LOCAL INFERENCE</span>
+            </div>
+            <div class="term-body" id="term-body" onclick="document.getElementById('web-term-input').focus()">
+              <div class="term-history" id="web-term-history">🕯️ NecroGit Spectral Shell v0.1.0 [Hacktoberfest 2026 Edition]
+Type 'help' to review available divination commands.
+</div>
+              <div class="term-input-row">
+                <span class="term-prompt">developer@necrogit:~$</span>
+                <input type="text" id="web-term-input" class="term-input" autocomplete="off" spellcheck="false" autofocus>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CLI Documentation Section -->
+    <section id="docs" class="content-section">
+      <div class="section-header">
+        <div class="section-label">Reference Manual</div>
+        <h2 class="section-title">CLI Documentation &amp; Setup</h2>
+        <p class="section-desc">Complete guide to running NecroGit on Linux, macOS, and Windows PowerShell.</p>
+      </div>
+
+      <div style="background:var(--bg-secondary); border:1px solid var(--border-color); border-radius:10px; padding:24px; margin-bottom:32px;">
+        <h3 style="color:#fff; margin-bottom:12px;">🚀 Quickstart Installation</h3>
+        <pre style="background:#0b0f17; padding:16px; border-radius:6px; font-family:var(--font-mono); font-size:0.9rem; overflow-x:auto;">
+# 1. Create a virtual environment
+python -m venv .venv
+
+# 2. Activate virtual environment (Windows PowerShell)
+.\.venv\Scripts\Activate.ps1
+# (Or on Linux/macOS: source .venv/bin/activate)
+
+# 3. Install in editable mode
+pip install -e .
+
+# 4. Verify installation
+necrogit --help</pre>
+      </div>
+
+      <table class="docs-table">
+        <thead>
+          <tr>
+            <th>Command</th>
+            <th>Arguments / Options</th>
+            <th>Description &amp; Behavior</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>necrogit summon</code></td>
+            <td><code>[REPO_PATH]</code></td>
+            <td>Mines Git commit history to extract the primary maintainer's name, commit volume, active era, and stylistic cadence.</td>
+          </tr>
+          <tr>
+            <td><code>necrogit inspect</code></td>
+            <td><code>[TARGET_DIR]</code></td>
+            <td>Recursively scans Python code via AST for obsolete libraries (<code>imp</code>, <code>pipes</code>, <code>cgi</code>, <code>time.clock</code>) and syntax errors.</td>
+          </tr>
+          <tr>
+            <td><code>necrogit patch</code></td>
+            <td><code>&lt;FILE&gt; [--model] [--base-url] [--apply]</code></td>
+            <td>Channels the maintainer via local LLM (Ollama) to draft an in-style unified diff. With <code>--apply</code>, writes a verified <code>.patch</code> file.</td>
+          </tr>
+          <tr>
+            <td><code>necrogit explain</code></td>
+            <td><code>&lt;FILE&gt; [--symbol] [--model] [--base-url]</code></td>
+            <td>Interviews the maintainer's spirit to explain obscure historical design choices and architectural trade-offs.</td>
+          </tr>
+          <tr>
+            <td><code>necrogit memory</code></td>
+            <td><code>[REPO_PATH] [--clear]</code></td>
+            <td>Displays stored séance dossiers from Backboard persistent memory. Bare invocation displays all known repositories.</td>
+          </tr>
+          <tr>
+            <td><code>necrogit serve</code></td>
+            <td><code>[--port 8000] [--open/--no-open]</code></td>
+            <td>Starts a local HTTP server and automatically opens this interactive CRT documentation workbench in your browser.</td>
+          </tr>
+          <tr>
+            <td><code>necrogit export-web</code></td>
+            <td><code>[DESTINATION] [--zip/--no-zip]</code></td>
+            <td>Exports the complete static documentation website and generated <code>necrogit-site.zip</code> bundle to any target folder.</td>
+          </tr>
+          <tr>
+            <td><code>necrogit doctor</code></td>
+            <td><code>[--model] [--base-url]</code></td>
+            <td>Performs system diagnostics checking Python, Git, Sentry, Backboard, and probe connectivity to your local Ollama server.</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- Architecture Section -->
+    <section id="architecture" class="content-section">
+      <div class="section-header">
+        <div class="section-label">Under the Hood</div>
+        <h2 class="section-title">Architectural Design</h2>
+        <p class="section-desc">Air-gapped by default, telemetry-instrumented when enabled.</p>
+      </div>
+
+      <div style="background:#080c14; border:1px solid var(--border-color); border-radius:10px; padding:24px; font-family:var(--font-mono); font-size:0.85rem; line-height:1.45; overflow-x:auto;">
+<pre style="color:var(--text-main);">
+                     ┌────────────────────────────────────────┐
+                     │          Abandoned Repository          │
+                     └───────────────────┬────────────────────┘
+                                         │
+                  ┌──────────────────────┴──────────────────────┐
+                  ▼                                             ▼
+     ┌────────────────────────┐                    ┌────────────────────────┐
+     │    MaintainerMedium    │                    │   ArchaeologyScanner   │
+     │  (GitPython Log Miner) │                    │    (AST NodeVisitor)   │
+     └────────────┬───────────┘                    └────────────┬───────────┘
+                  │ Maintainer Persona                          │ Bitrot Relics &amp;
+                  │ (name, cadence, style)                      │ Deprecations
+                  └──────────────────────┬──────────────────────┘
+                                         │
+                                         ▼
+                            ┌────────────────────────┐
+                            │      SeanceEngine      │
+                            │   Google Gemma 2 9B    │
+                            │  (Ollama localhost)    │
+                            └────────────┬───────────┘
+                                         │
+                  ┌──────────────────────┴──────────────────────┐
+                  ▼                                             ▼
+     ┌────────────────────────┐                    ┌────────────────────────┐
+     │ Resurrective Diff File │                    │    Backboard Memory    │
+     │     (.patch format)    │                    │ (Persistent Dossier &amp;  │
+     │                        │                    │  Sentry Span Tracing)  │
+     └────────────────────────┘                    └────────────────────────┘
+</pre>
+      </div>
+    </section>
+
+    <!-- Security & Privacy Section -->
+    <section id="security" class="content-section">
+      <div class="section-header">
+        <div class="section-label">Privacy First</div>
+        <h2 class="section-title">Security &amp; Data Boundaries</h2>
+        <p class="section-desc">An honest, auditable account of how your source code is handled.</p>
+      </div>
+
+      <div class="features-grid">
+        <div class="card">
+          <div class="card-icon">🛡️</div>
+          <h3 class="card-title">Air-Gapped Local Inference</h3>
+          <p class="card-desc">All code analysis, prompt construction, and patch synthesis happen strictly on your machine via <code>http://localhost:11434</code>. Code is never transmitted to cloud APIs like OpenAI or Anthropic.</p>
+        </div>
+
+        <div class="card">
+          <div class="card-icon">🔒</div>
+          <h3 class="card-title">Opt-In Sentry Observability</h3>
+          <p class="card-desc">Sentry Agent Tracing is completely disabled unless you explicitly supply the <code>SENTRY_DSN</code> environment variable. No anonymous telemetry is collected by default.</p>
+        </div>
+
+        <div class="card">
+          <div class="card-icon">💾</div>
+          <h3 class="card-title">Local Persistent Memory</h3>
+          <p class="card-desc">Séance memory dossiers are saved locally in <code>.necrogit/seance_memory.json</code>. Cloud state synchronization with Backboard requires an explicit <code>BACKBOARD_API_KEY</code>.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Downloads Section -->
+    <section id="downloads" class="content-section">
+      <div class="section-header">
+        <div class="section-label">Distribution</div>
+        <h2 class="section-title">Get NecroGit</h2>
+        <p class="section-desc">Deploy via Python package, clone the GitHub repository, or download the static documentation bundle.</p>
+      </div>
+
+      <div class="features-grid">
+        <div class="card" style="border-color:var(--accent-violet);">
+          <h3 class="card-title">📦 Python Package</h3>
+          <p class="card-desc">Install directly via pip or uv for full CLI tooling across all platforms.</p>
+          <div style="margin:20px 0;">
+            <code>pip install necrogit</code>
+          </div>
+          <a href="https://github.com/avrojitduttaj/necrogit" target="_blank" class="btn btn-primary" style="width:100%;">GitHub Repository</a>
+        </div>
+
+        <div class="card" style="border-color:var(--accent-gold);">
+          <h3 class="card-title">🌐 Standalone Web Bundle</h3>
+          <p class="card-desc">Download the self-contained HTML/CSS/JS documentation workbench to inspect or host offline.</p>
+          <div style="margin:20px 0;">
+            <span style="font-size:0.85rem; color:var(--text-muted);">Includes interactive CRT workbench, terminal emulator, and API manual.</span>
+          </div>
+          <a href="necrogit-site.zip" download="necrogit-site.zip" class="btn btn-gold" style="width:100%;">Download necrogit-site.zip</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section id="faq" class="content-section">
+      <div class="section-header">
+        <div class="section-label">Questions &amp; Answers</div>
+        <h2 class="section-title">Frequently Asked Questions</h2>
+      </div>
+
+      <div class="faq-grid">
+        <div class="faq-item">
+          <h4 class="faq-question">What if Ollama returns 404 Not Found?</h4>
+          <p class="faq-answer">Ensure Ollama is running (`ollama serve`) and updated to &gt;= 0.1.24. NecroGit automatically supports both the OpenAI-compatible <code>/v1/chat/completions</code> endpoint and native <code>/api/chat</code> fallback. Run <code>necrogit doctor</code> to diagnose.</p>
+        </div>
+
+        <div class="faq-item">
+          <h4 class="faq-question">Which local open-weight models are supported?</h4>
+          <p class="faq-answer">Google Gemma 2 (<code>gemma2:9b</code>, <code>gemma2:2b</code>, <code>gemma2:27b</code>) and Meta Llama 3.2 (<code>llama3.2:3b</code>). Gemma 2 9B is the recommended default for complex code reasoning.</p>
+        </div>
+
+        <div class="faq-item">
+          <h4 class="faq-question">How does NecroGit preserve maintainer coding style?</h4>
+          <p class="faq-answer">NecroGit mines commit frequency and author log cadence to construct a maintainer prompt persona. It instructs the local model to preserve variable naming, casing, and comment cadence while upgrading deprecated APIs.</p>
+        </div>
+
+        <div class="faq-item">
+          <h4 class="faq-question">How do I host this website on GitHub Pages?</h4>
+          <p class="faq-answer">Run <code>necrogit export-web ./docs</code>, commit the <code>docs</code> directory to your repository, and enable GitHub Pages on the <code>/docs</code> folder in repository settings.</p>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Site Footer -->
+  <footer class="site-footer">
+    <div class="footer-container">
+      <div class="footer-copy">
+        🕯️ NecroGit: The Repository Medium // v0.1.0 // Hacktoberfest 2026 // MIT License
+      </div>
+      <div class="footer-links">
+        <a href="https://github.com/avrojitduttaj/necrogit" target="_blank">GitHub</a>
+        <a href="#docs">CLI Reference</a>
+        <a href="#workbench">Web Workbench</a>
+        <a href="#architecture">Architecture</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>

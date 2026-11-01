@@ -65,6 +65,8 @@ class BackboardMemory:
     def get_dossier(self, repo_key: str) -> Optional[Dict[str, Any]]:
         """Retrieve a stored dossier by repository key."""
         try:
+            if not self.storage_file.exists():
+                return None
             data = json.loads(self.storage_file.read_text(encoding="utf-8"))
             return data.get("dossiers", {}).get(repo_key)
         except Exception:
@@ -73,10 +75,19 @@ class BackboardMemory:
     def list_dossiers(self) -> Dict[str, Any]:
         """List all known repository dossiers currently in persistent memory."""
         try:
+            if not self.storage_file.exists():
+                return {}
             data = json.loads(self.storage_file.read_text(encoding="utf-8"))
             return data.get("dossiers", {})
         except Exception:
             return {}
+
+    def clear(self) -> None:
+        """Clear all stored dossiers from local persistent memory."""
+        try:
+            self.storage_file.write_text(json.dumps({"dossiers": {}, "version": "1.0"}, indent=2), encoding="utf-8")
+        except Exception:
+            pass
 
     def _sync_remote(self, repo_key: str, dossier: Dict[str, Any]) -> bool:
         """Sync dossier to Backboard platform state."""

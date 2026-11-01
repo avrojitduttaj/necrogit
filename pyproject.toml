@@ -22,3 +22,6 @@ necrogit = "necrogit.cli:cli"
 
 [tool.setuptools.packages.find]
 include = ["necrogit*"]
+
+[tool.setuptools.package-data]
+"necrogit.web" = ["*.html", "*.css", "*.js", "*.zip"]
