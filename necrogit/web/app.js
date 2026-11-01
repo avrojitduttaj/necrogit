@@ -12,6 +12,13 @@ function switchWbTab(index) {
   }
 }
 
+function switchOsTab(index) {
+  const tabs = document.querySelectorAll('.os-tab');
+  const contents = document.querySelectorAll('.os-content');
+  tabs.forEach((tab, i) => tab.classList.toggle('active', i === index));
+  contents.forEach((content, i) => content.classList.toggle('active', i === index));
+}
+
 function copyToClipboard(elementId, btnElement) {
   const text = document.getElementById(elementId).innerText || document.getElementById(elementId).value;
   navigator.clipboard.writeText(text).then(() => {

@@ -76,46 +76,70 @@ It includes a self-contained web workbench, an interactive CRT terminal emulator
 
 ---
 
-## 🚀 Installation & Setup
+## 🚀 Installation & Arbitrary Repository Usage
 
-### Linux / macOS
-```bash
-# Clone the repository
-git clone https://github.com/avrojitduttaj/necrogit.git
-cd necrogit
+NecroGit is primarily an **installable local developer CLI**. You can install it once in your Python environment and execute it against **any arbitrary cloned repository** on your workstation.
 
-# Create and activate virtual environment
-python -m venv .venv
-source .venv/bin/activate
+### Option A: Install Directly into Your Python Environment (Recommended)
 
-# Install in editable mode
-pip install -e .
+```powershell
+# Install directly from GitHub:
+python -m pip install "git+https://github.com/avrojitduttaj/necrogit.git"
 
-# Verify installation
-necrogit --help
+# Or install from PyPI registry:
+python -m pip install necrogit
+
+# Verify system diagnostics:
+necrogit doctor
 ```
 
-### Windows PowerShell
-```powershell
-# 1. Clone repository
+### Option B: Clone and Install in Editable Mode (Development)
+
+#### Linux / macOS
+```bash
 git clone https://github.com/avrojitduttaj/necrogit.git
 cd necrogit
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -e .
+necrogit doctor
+```
 
-# 2. Create virtual environment
+#### Windows (PowerShell)
+```powershell
+git clone https://github.com/avrojitduttaj/necrogit.git
+cd necrogit
 python -m venv .venv
-
-# 3. Allow script execution for active session if needed
-Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
-
-# 4. Activate virtual environment
 .\.venv\Scripts\Activate.ps1
+pip install -e .
+necrogit doctor
+```
 
-# 5. Install in editable mode
-python -m pip install --upgrade pip
-python -m pip install -e .
+---
 
-# 6. Verify installation
-necrogit --help
+## 💻 Workflow: Resurrect Any Cloned Project
+
+Open your terminal (e.g. VS Code integrated terminal), clone any legacy project, and run NecroGit directly inside it:
+
+```powershell
+# 1. Clone any target repository
+git clone https://github.com/someuser/legacy-project.git
+cd legacy-project
+
+# 2. Inspect bitrot (analyzes target project, zero pollution)
+necrogit inspect .
+
+# 3. Channel the original maintainer's essence from git commit logs
+necrogit summon .
+
+# 4. Synthesize a resurrective patch (requires local Ollama)
+necrogit patch src/legacy_worker.py --apply
+
+# 5. Explain obscure historical architecture decisions
+necrogit explain src/legacy_worker.py --symbol run_pipeline
+
+# 6. Review persistent dossiers
+necrogit memory
 ```
 
 ---

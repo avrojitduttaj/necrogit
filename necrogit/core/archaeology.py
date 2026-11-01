@@ -100,6 +100,8 @@ class ArchaeologyScanner(ast.NodeVisitor):
 def inspect_file(filepath: Union[str, Path]) -> List[Dict[str, Any]]:
     """Scan a single Python file for bitrot, deprecated modules, and syntax errors."""
     path = Path(filepath)
+    if path.is_dir():
+        return []
     with trace_span("necrogit.archaeology", f"inspect_{path.name}"):
         try:
             with open(path, "r", encoding="utf-8", errors="ignore") as f:
