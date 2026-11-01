@@ -17,7 +17,7 @@ from necrogit.core.archaeology import inspect_directory, inspect_file
 from necrogit.core.engine import SeanceEngine
 from necrogit.telemetry import init_telemetry
 
-console = Console()
+console = Console(legacy_windows=False)
 init_telemetry()
 
 @click.group()
