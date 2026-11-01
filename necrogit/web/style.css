@@ -618,6 +618,109 @@ input.term-input {
   line-height: 1.55;
 }
 
+/* OS Tabs & Installation Component */
+.os-tabs-container {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  overflow: hidden;
+  margin-top: 24px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
+}
+
+.os-tabs-header {
+  display: flex;
+  background: #0d131f;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.os-tab {
+  padding: 12px 24px;
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  font-family: var(--font-sans);
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  border-right: 1px solid var(--border-color);
+  transition: all 0.15s ease;
+}
+
+.os-tab:hover {
+  color: var(--text-main);
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.os-tab.active {
+  color: #fff;
+  background: var(--bg-secondary);
+  border-bottom: 2px solid var(--accent-violet);
+}
+
+.os-content {
+  display: none;
+  padding: 24px;
+}
+
+.os-content.active {
+  display: block;
+}
+
+.code-block-wrapper {
+  position: relative;
+  background: #080c14;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  padding: 16px;
+  margin: 12px 0 20px;
+  font-family: var(--font-mono);
+  font-size: 0.88rem;
+  overflow-x: auto;
+}
+
+.code-block-wrapper pre {
+  margin: 0;
+  color: #e5e7eb;
+}
+
+.code-block-wrapper .copy-block-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border-color);
+  color: var(--text-muted);
+  font-size: 0.78rem;
+  padding: 4px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.code-block-wrapper .copy-block-btn:hover {
+  color: #fff;
+  border-color: var(--accent-violet);
+}
+
+.notice-banner {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  background: rgba(139, 92, 246, 0.08);
+  border: 1px solid rgba(139, 92, 246, 0.3);
+  border-radius: 8px;
+  padding: 16px;
+  margin: 16px 0;
+  color: var(--text-main);
+  font-size: 0.9rem;
+}
+
+.notice-banner.gold {
+  background: rgba(212, 175, 55, 0.08);
+  border-color: rgba(212, 175, 55, 0.35);
+}
+
 /* Footer */
 footer.site-footer {
   border-top: 1px solid var(--border-color);

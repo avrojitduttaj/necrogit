@@ -308,3 +308,29 @@ def test_cli_doctor():
     assert result.exit_code == 0
     assert "NecroGit System Diagnostics" in result.output
     assert "Python Environment" in result.output
+
+def test_cli_directory_handling_for_patch_and_explain(tmp_path):
+    runner = CliRunner()
+    proj = tmp_path / "legacy_dir"
+    proj.mkdir()
+    relic = proj / "ancient.py"
+    relic.write_text("import imp\nimport pipes\n", encoding="utf-8")
+
+    # Patch on directory
+    res_patch = runner.invoke(cli, ["patch", str(proj)])
+    assert res_patch.exit_code == 0
+    assert "is a directory" in res_patch.output
+    assert "ancient.py" in res_patch.output
+
+    # Explain on directory
+    res_explain = runner.invoke(cli, ["explain", str(proj)])
+    assert res_explain.exit_code == 0
+    assert "is a directory" in res_explain.output
+    assert "ancient.py" in res_explain.output
+
+    # Inspect single file
+    res_inspect_file = runner.invoke(cli, ["inspect", str(relic)])
+    assert res_inspect_file.exit_code == 0
+    assert "ancient.py" in res_inspect_file.output
+    assert "imp" in res_inspect_file.output
+

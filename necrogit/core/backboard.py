@@ -12,9 +12,18 @@ class BackboardMemory:
     and Backboard (R-CLI / backboard.io) cloud synchronization when configured.
     """
 
-    def __init__(self, workspace_root: Optional[Path] = None):
-        self.workspace_root = Path(workspace_root or Path.cwd()).resolve()
-        self.storage_dir = self.workspace_root / ".necrogit"
+    def __init__(self, workspace_root: Optional[Any] = None):
+        if workspace_root is not None:
+            self.storage_dir = Path(workspace_root).resolve() / ".necrogit"
+        else:
+            local_necrogit = Path.cwd() / ".necrogit"
+            if local_necrogit.is_dir():
+                self.storage_dir = local_necrogit.resolve()
+            else:
+                custom_home = os.getenv("NECROGIT_HOME")
+                base_dir = Path(custom_home).resolve() if custom_home else Path.home()
+                self.storage_dir = base_dir / ".necrogit"
+        self.workspace_root = self.storage_dir.parent
         self.storage_file = self.storage_dir / "seance_memory.json"
         self.api_key = os.getenv("BACKBOARD_API_KEY")
         self.base_url = os.getenv("BACKBOARD_BASE_URL", "https://app.backboard.io/api").rstrip("/")

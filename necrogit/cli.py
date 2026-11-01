@@ -65,10 +65,20 @@ def summon(repo_path: str) -> None:
 @click.argument("target_dir", default=".")
 def inspect(target_dir: str) -> None:
     """Scan local code files for bitrot, deprecated modules, and breaking syntax."""
+    target_path = Path(target_dir)
+    if not target_path.exists():
+        console.print(f"[red]Cannot find target path: {target_dir}[/red]")
+        return
+
     console.print(f"[dim]Performing code archaeology on: {target_dir}...[/dim]")
     record_breadcrumb("cli", "Invoking inspect command", data={"target_dir": target_dir})
 
-    report = inspect_directory(target_dir)
+    if target_path.is_file():
+        issues = inspect_file(target_path)
+        report = {target_path.name: issues} if issues else {}
+    else:
+        report = inspect_directory(target_path)
+
     total_issues = sum(len(issues) for issues in report.values())
     record_breadcrumb("archaeology", f"Scan complete. Discovered {total_issues} relics.", data={"files_with_rot": len(report)})
 
@@ -89,7 +99,7 @@ def inspect(target_dir: str) -> None:
     console.print(table)
 
 @cli.command()
-@click.argument("file_path")
+@click.argument("file_path", required=False, default=".")
 @click.option("--repo", default=".", help="Root path of the repository")
 @click.option("--model", default="gemma2:9b", help="Local open-weight model tag (e.g. gemma2:9b, llama3.2:3b)")
 @click.option("--base-url", default=None, help="Inference API endpoint (default: http://localhost:11434/v1)")
@@ -99,6 +109,17 @@ def patch(file_path: str, repo: str, model: str, base_url: Optional[str], apply:
     target = Path(file_path)
     if not target.exists():
         console.print(f"[red]Cannot find target artifact: {file_path}[/red]")
+        return
+
+    if target.is_dir():
+        console.print(f"[yellow]Target '{file_path}' is a directory. Please specify a file, e.g.: necrogit patch ./path/to/relic.py. Run 'necrogit inspect {file_path}' to find candidate files.[/yellow]")
+        candidates = inspect_directory(target)
+        if candidates:
+            console.print("\n[bold]Discovered candidate files with identified bitrot:[/bold]")
+            for candidate, issues in list(candidates.items())[:5]:
+                console.print(f"  • [cyan]{candidate}[/cyan] ({len(issues)} relic{'s' if len(issues) > 1 else ''})")
+            sample = list(candidates.keys())[0]
+            console.print(f"\n[dim]Try running:[/dim] [bold green]necrogit patch {sample} --apply[/bold green]")
         return
 
     record_breadcrumb("cli", "Invoking patch command", data={"target": file_path, "model": model})
@@ -133,7 +154,7 @@ def patch(file_path: str, repo: str, model: str, base_url: Optional[str], apply:
     memory_store.save_dossier(repo_name, persona, relics_count=len(issues), last_action=f"patch {target.name}")
 
 @cli.command()
-@click.argument("file_path")
+@click.argument("file_path", required=False, default=".")
 @click.option("--symbol", default=None, help="Specific function, class, or variable name to analyze")
 @click.option("--repo", default=".", help="Root path of the repository")
 @click.option("--model", default="gemma2:9b", help="Local open-weight model tag")
@@ -143,6 +164,17 @@ def explain(file_path: str, symbol: Optional[str], repo: str, model: str, base_u
     target = Path(file_path)
     if not target.exists():
         console.print(f"[red]Cannot find target artifact: {file_path}[/red]")
+        return
+
+    if target.is_dir():
+        console.print(f"[yellow]Target '{file_path}' is a directory. Please specify a file, e.g.: necrogit explain ./path/to/relic.py. Run 'necrogit inspect {file_path}' to find candidate files.[/yellow]")
+        candidates = inspect_directory(target)
+        if candidates:
+            console.print("\n[bold]Discovered candidate files with identified bitrot:[/bold]")
+            for candidate, issues in list(candidates.items())[:5]:
+                console.print(f"  • [cyan]{candidate}[/cyan] ({len(issues)} relic{'s' if len(issues) > 1 else ''})")
+            sample = list(candidates.keys())[0]
+            console.print(f"\n[dim]Try running:[/dim] [bold green]necrogit explain {sample} --symbol <function_name>[/bold green]")
         return
 
     record_breadcrumb("cli", "Invoking explain command", data={"target": file_path, "symbol": symbol, "model": model})

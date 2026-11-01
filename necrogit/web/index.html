@@ -27,11 +27,11 @@
 
       <nav class="main-nav">
         <a href="#features">Features</a>
-        <a href="#workflow">How It Works</a>
+        <a href="#installation">Install CLI</a>
         <a href="#workbench">Interactive Séance</a>
         <a href="#docs">CLI Docs</a>
         <a href="#architecture">Architecture</a>
-        <a href="#downloads" class="btn btn-primary">Download</a>
+        <a href="#downloads" class="btn btn-primary">Downloads</a>
       </nav>
     </div>
   </header>
@@ -53,11 +53,17 @@
 
     <div class="hero-actions">
       <div class="install-command-box">
-        <span>$ pip install necrogit</span>
-        <button class="copy-btn" onclick="copyCommandText('pip install necrogit', this)">Copy</button>
+        <span style="color:var(--accent-violet); font-weight:700;">$</span>&nbsp;<span>pip install "git+https://github.com/avrojitduttaj/necrogit.git"</span>
+        <button class="copy-btn" onclick="copyCommandText('pip install &quot;git+https://github.com/avrojitduttaj/necrogit.git&quot;', this)">Copy</button>
       </div>
-      <a href="#workbench" class="btn btn-primary">Try Web Séance</a>
-      <a href="#downloads" class="btn btn-secondary">Download Bundle</a>
+      <a href="#installation" class="btn btn-primary">CLI Install Guide</a>
+      <a href="#workbench" class="btn btn-secondary">Web Séance</a>
+    </div>
+
+    <div style="display:flex; justify-content:center; gap:16px; font-size:0.85rem; color:var(--text-muted); margin-top:-20px; margin-bottom:30px; flex-wrap:wrap;">
+      <span>GitHub: <code>pip install "git+https://github.com/avrojitduttaj/necrogit.git"</code></span>
+      <span>•</span>
+      <span>PyPI: <code>pip install necrogit</code></span>
     </div>
 
     <div style="display:flex; justify-content:center; gap:20px; font-size:0.85rem; color:var(--text-dim); flex-wrap:wrap;">
@@ -406,30 +412,187 @@ necrogit --help</pre>
       </div>
     </section>
 
+    <!-- Installation Section -->
+    <section id="installation" class="content-section">
+      <div class="section-header">
+        <div class="section-label">CLI Setup</div>
+        <h2 class="section-title">Install NecroGit CLI Locally</h2>
+        <p class="section-desc">NecroGit is primarily a local developer CLI tool for your terminal. Install it once in your Python environment and execute it against any cloned repository on your workstation.</p>
+      </div>
+
+      <div class="notice-banner">
+        <div style="font-size:1.5rem;">⚡</div>
+        <div>
+          <strong>Arbitrary Repository Support:</strong> You do not need to clone NecroGit or run it from its source directory. Once installed, simply open your terminal (e.g. inside VS Code), navigate to any legacy or cloned project (<code>cd my-project</code>), and invoke <code>necrogit inspect .</code> directly.
+        </div>
+      </div>
+
+      <div class="os-tabs-container">
+        <div class="os-tabs-header">
+          <button class="os-tab active" onclick="switchOsTab(0)">🪟 Windows (PowerShell)</button>
+          <button class="os-tab" onclick="switchOsTab(1)">🍎 macOS (Terminal / Zsh)</button>
+          <button class="os-tab" onclick="switchOsTab(2)">🐧 Linux (Bash)</button>
+        </div>
+
+        <!-- Windows Tab -->
+        <div class="os-content active">
+          <h3 style="color:#fff; font-size:1.05rem; margin-bottom:8px;">1. Install NecroGit via PowerShell:</h3>
+          <p style="color:var(--text-muted); font-size:0.9rem;">Install directly from GitHub or from PyPI into your active virtual environment or Python user installation:</p>
+          <div class="code-block-wrapper">
+            <button class="copy-block-btn" onclick="copyCommandText('python -m pip install &quot;git+https://github.com/avrojitduttaj/necrogit.git&quot;', this)">Copy</button>
+            <pre><code class="language-powershell"># Install CLI directly from GitHub repository:
+python -m pip install "git+https://github.com/avrojitduttaj/necrogit.git"
+
+# Or install from PyPI registry:
+python -m pip install necrogit
+
+# Verify CLI entry point and system diagnostics:
+necrogit doctor</code></pre>
+          </div>
+
+          <h3 style="color:#fff; font-size:1.05rem; margin-top:20px; margin-bottom:8px;">2. Run Against Any Cloned Repository:</h3>
+          <p style="color:var(--text-muted); font-size:0.9rem;">Open any legacy repository in VS Code or PowerShell and commune with its history:</p>
+          <div class="code-block-wrapper">
+            <button class="copy-block-btn" onclick="copyCommandText('git clone &lt;repository-url&gt;&#10;cd &lt;repository-folder&gt;&#10;necrogit inspect .&#10;necrogit summon .&#10;necrogit memory', this)">Copy</button>
+            <pre><code class="language-powershell"># Navigate to your target repository
+cd path\to\any-legacy-repo
+
+# Scan all Python files for bitrot and deprecated standard libraries
+necrogit inspect .
+
+# Summon original maintainer's persona from git commit logs
+necrogit summon .
+
+# Synthesize a style-preserving diff for a legacy file (requires Ollama running)
+necrogit patch path\to\relic.py --apply
+
+# Interview the ghost regarding historical architecture choices
+necrogit explain path\to\relic.py --symbol run_pipeline
+
+# Check persistent repository memory dossiers
+necrogit memory</code></pre>
+          </div>
+        </div>
+
+        <!-- macOS Tab -->
+        <div class="os-content">
+          <h3 style="color:#fff; font-size:1.05rem; margin-bottom:8px;">1. Install NecroGit via Terminal:</h3>
+          <p style="color:var(--text-muted); font-size:0.9rem;">Install into your Python virtualenv or user environment using pip:</p>
+          <div class="code-block-wrapper">
+            <button class="copy-block-btn" onclick="copyCommandText('python3 -m pip install &quot;git+https://github.com/avrojitduttaj/necrogit.git&quot;', this)">Copy</button>
+            <pre><code class="language-bash"># Install CLI directly from GitHub:
+python3 -m pip install "git+https://github.com/avrojitduttaj/necrogit.git"
+
+# Or install from PyPI:
+python3 -m pip install necrogit
+
+# Verify installation:
+necrogit doctor</code></pre>
+          </div>
+
+          <h3 style="color:#fff; font-size:1.05rem; margin-top:20px; margin-bottom:8px;">2. Run Against Any Cloned Repository:</h3>
+          <p style="color:var(--text-muted); font-size:0.9rem;">Navigate to your target repository and resurrect legacy code:</p>
+          <div class="code-block-wrapper">
+            <button class="copy-block-btn" onclick="copyCommandText('cd path/to/any-legacy-repo&#10;necrogit inspect .&#10;necrogit summon .&#10;necrogit memory', this)">Copy</button>
+            <pre><code class="language-bash"># Navigate to your target project
+cd path/to/any-legacy-repo
+
+# Run AST bitrot inspection
+necrogit inspect .
+
+# Mine git logs to divine the maintainer essence
+necrogit summon .
+
+# Generate an in-style unified diff
+necrogit patch path/to/relic.py --apply
+
+# Explain legacy design decisions
+necrogit explain path/to/relic.py --symbol run_pipeline
+
+# View persistent dossiers
+necrogit memory</code></pre>
+          </div>
+        </div>
+
+        <!-- Linux Tab -->
+        <div class="os-content">
+          <h3 style="color:#fff; font-size:1.05rem; margin-bottom:8px;">1. Install NecroGit via Bash:</h3>
+          <p style="color:var(--text-muted); font-size:0.9rem;">Install into your Python environment using pip:</p>
+          <div class="code-block-wrapper">
+            <button class="copy-block-btn" onclick="copyCommandText('pip install &quot;git+https://github.com/avrojitduttaj/necrogit.git&quot;', this)">Copy</button>
+            <pre><code class="language-bash"># Install directly from GitHub:
+pip install "git+https://github.com/avrojitduttaj/necrogit.git"
+
+# Or install from PyPI:
+pip install necrogit
+
+# Check diagnostics:
+necrogit doctor</code></pre>
+          </div>
+
+          <h3 style="color:#fff; font-size:1.05rem; margin-top:20px; margin-bottom:8px;">2. Run Against Any Cloned Repository:</h3>
+          <p style="color:var(--text-muted); font-size:0.9rem;">Execute directly in your target repository:</p>
+          <div class="code-block-wrapper">
+            <button class="copy-block-btn" onclick="copyCommandText('cd path/to/any-legacy-repo&#10;necrogit inspect .&#10;necrogit summon .&#10;necrogit memory', this)">Copy</button>
+            <pre><code class="language-bash"># Enter your target project directory
+cd path/to/any-legacy-repo
+
+# Scan code files
+necrogit inspect .
+
+# Channel git author history
+necrogit summon .
+
+# Draft resurrective patch
+necrogit patch path/to/relic.py --apply
+
+# Memory status
+necrogit memory</code></pre>
+          </div>
+        </div>
+      </div>
+    </section>
+
     <!-- Downloads Section -->
     <section id="downloads" class="content-section">
       <div class="section-header">
-        <div class="section-label">Distribution</div>
-        <h2 class="section-title">Get NecroGit</h2>
-        <p class="section-desc">Deploy via Python package, clone the GitHub repository, or download the static documentation bundle.</p>
+        <div class="section-label">Downloads &amp; Distribution</div>
+        <h2 class="section-title">Packages &amp; Web Bundles</h2>
+        <p class="section-desc">Distinguish between the installable developer CLI tool and the offline web documentation bundle.</p>
       </div>
 
       <div class="features-grid">
         <div class="card" style="border-color:var(--accent-violet);">
-          <h3 class="card-title">📦 Python Package</h3>
-          <p class="card-desc">Install directly via pip or uv for full CLI tooling across all platforms.</p>
-          <div style="margin:20px 0;">
-            <code>pip install necrogit</code>
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+            <h3 class="card-title" style="margin:0;">📦 NecroGit Local CLI Tool</h3>
+            <span class="badge-pill" style="margin:0; background:rgba(139,92,246,0.2);">Python Package</span>
           </div>
-          <a href="https://github.com/avrojitduttaj/necrogit" target="_blank" class="btn btn-primary" style="width:100%;">GitHub Repository</a>
+          <p class="card-desc">The primary developer tool. Runs in your terminal to inspect codebases, summon maintainers, and generate patches.</p>
+          
+          <div style="background:#080c14; border:1px solid var(--border-color); border-radius:6px; padding:12px; margin:16px 0; font-family:var(--font-mono); font-size:0.85rem;">
+            <div style="color:var(--text-dim); margin-bottom:4px;"># Install via GitHub</div>
+            <div style="color:var(--accent-violet); margin-bottom:10px;">pip install "git+https://github.com/avrojitduttaj/necrogit.git"</div>
+            <div style="color:var(--text-dim); margin-bottom:4px;"># Install via PyPI</div>
+            <div style="color:var(--accent-violet);">pip install necrogit</div>
+          </div>
+
+          <a href="https://github.com/avrojitduttaj/necrogit" target="_blank" class="btn btn-primary" style="width:100%;">View on GitHub</a>
         </div>
 
         <div class="card" style="border-color:var(--accent-gold);">
-          <h3 class="card-title">🌐 Standalone Web Bundle</h3>
-          <p class="card-desc">Download the self-contained HTML/CSS/JS documentation workbench to inspect or host offline.</p>
-          <div style="margin:20px 0;">
-            <span style="font-size:0.85rem; color:var(--text-muted);">Includes interactive CRT workbench, terminal emulator, and API manual.</span>
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+            <h3 class="card-title" style="margin:0;">🌐 Standalone Web Documentation</h3>
+            <span class="badge-pill" style="margin:0; background:rgba(212,175,55,0.2); color:var(--accent-gold);">Static ZIP</span>
           </div>
+          <p class="card-desc">Self-contained documentation workbench with interactive CRT simulator and reference guides. <em>(Not required for running CLI scans).</em></p>
+          
+          <div style="background:#080c14; border:1px solid var(--border-color); border-radius:6px; padding:12px; margin:16px 0; font-family:var(--font-mono); font-size:0.85rem;">
+            <div style="color:var(--text-dim); margin-bottom:4px;"># Or export locally from CLI:</div>
+            <div style="color:var(--accent-gold); margin-bottom:10px;">necrogit export-web ./docs</div>
+            <div style="color:var(--text-dim); margin-bottom:4px;"># Host with built-in server:</div>
+            <div style="color:var(--accent-gold);">necrogit serve --port 8000</div>
+          </div>
+
           <a href="necrogit-site.zip" download="necrogit-site.zip" class="btn btn-gold" style="width:100%;">Download necrogit-site.zip</a>
         </div>
       </div>
